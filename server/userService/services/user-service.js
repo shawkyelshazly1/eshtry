@@ -107,8 +107,13 @@ class UserService {
 
 	// delete user
 	async DeleteUser(id) {
-		const deletedUser = await this.repository.DeleteUser(id);
-		return FormateData(deletedUser);
+		try {
+			const deletedUser = await this.repository.DeleteUser(id);
+			return FormateData(deletedUser);
+		} catch (error) {
+			console.error(error);
+			return FormateData({ msg: "Something went wrong!" });
+		}
 	}
 
 	// get all users

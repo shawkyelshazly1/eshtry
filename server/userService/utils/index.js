@@ -57,11 +57,13 @@ module.exports.CreateChannel = async () => {
 	}
 };
 
+// publish message to the amqplib queue
 module.exports.PublishMessage = (channel, queue, msg) => {
 	channel.sendToQueue(queue, Buffer.from(JSON.stringify(msg)));
 	console.log("Sent: ", msg, "to '", queue, "' queue.");
 };
 
+// subscribe and consume incoming messages
 module.exports.SubscribeMessage = async (channel, queue, service) => {
 	await channel.consume(queue, (data) => {
 		channel.ack(data);
@@ -69,6 +71,7 @@ module.exports.SubscribeMessage = async (channel, queue, service) => {
 	});
 };
 
+// switch to handle the messages actions from other services
 module.exports.handleServices = async (channel, messageData, service) => {
 	switch (messageData.action) {
 		case "CREATE":
@@ -77,10 +80,21 @@ module.exports.handleServices = async (channel, messageData, service) => {
 			this.PublishMessage(channel, "USER-ADMIN", { data });
 			break;
 		case "DELETE":
+			const { data: user } = await service.DeleteUser(
+				messageData.payload.userId
+			);
+			this.PublishMessage(channel, "USER-ADMIN", { data: user });
 			break;
 		case "GET-ONE":
+			const { data: foundUser } = await service.GetUserById(
+				messageData.payload.userId
+			);
+			this.PublishMessage(channel, "USER-ADMIN", { data: foundUser });
+
 			break;
 		case "GET-ALL":
+			const { data: users } = await service.GetAllUsers();
+			this.PublishMessage(channel, "USER-ADMIN", { data: users });
 			break;
 
 		default:

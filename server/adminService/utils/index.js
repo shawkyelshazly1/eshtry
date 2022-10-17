@@ -65,11 +65,29 @@ module.exports.PublishMessage = (channel, queue, msg) => {
 
 module.exports.SubscribeMessage = async (channel, queue, res) => {
 	let msg;
-
 	channel.consume(queue, (data) => {
 		msg = JSON.parse(data.content).data;
 		channel.ack(data);
 		channel.cancel(data.fields.consumerTag);
 		return res.status(200).json(msg);
 	});
+};
+
+// start Messaging function which returns response with the API result
+module.exports.StartMessaging = async (
+	channel,
+	publishQueue,
+	consumeQueue,
+	action,
+	payload,
+	res
+) => {
+	// publish message to user service to create user
+	this.PublishMessage(channel, publishQueue, {
+		action,
+		payload,
+	});
+
+	// subscribe to get message from user service with result
+	this.SubscribeMessage(channel, consumeQueue, res);
 };

@@ -86,7 +86,7 @@ class UserRepository {
 			const deletedUser = await UserModel.findByIdAndDelete(
 				mongoose.Types.ObjectId(id)
 			);
-			return {};
+			return deletedUser;
 		} catch (error) {
 			console.error(error);
 			return FormateData({ msg: "Something went wrong!" });
