@@ -2,6 +2,7 @@ const express = require("express"),
 	{ databaseConnection } = require("./database"),
 	cors = require("cors"),
 	{ userAPI } = require("./api");
+const { CreateChannel } = require("./utils");
 
 require("dotenv").config();
 
@@ -15,8 +16,18 @@ app.use(cors());
 // start user service DB
 databaseConnection();
 
-// add routes
-userAPI(app);
+// connect rabbitmqlp
+let channel;
+CreateChannel()
+	.then((res) => {
+		channel = res;
+	})
+	.then((_) => {
+		// setting routes
+		userAPI(app, channel);
+	});
+
+
 
 // express app starts listening on port 8001
 app.listen(process.env.PORT || 8001, () => {

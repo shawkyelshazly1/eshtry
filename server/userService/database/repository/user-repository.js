@@ -79,6 +79,30 @@ class UserRepository {
 		}
 		return [];
 	}
+
+	// delete User by id
+	async DeleteUser(id) {
+		try {
+			const deletedUser = await UserModel.findByIdAndDelete(
+				mongoose.Types.ObjectId(id)
+			);
+			return {};
+		} catch (error) {
+			console.error(error);
+			return FormateData({ msg: "Something went wrong!" });
+		}
+	}
+
+	// get all users
+	async GetAllUsers() {
+		try {
+			const users = await UserModel.find({}, { password: 0 });
+			return users || [];
+		} catch (error) {
+			console.error(error);
+			return FormateData({ msg: "Something went wrong!" });
+		}
+	}
 }
 
 module.exports = UserRepository;

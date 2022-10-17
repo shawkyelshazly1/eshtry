@@ -104,6 +104,44 @@ class UserService {
 
 		return FormateData(updatedAddress);
 	}
+
+	// delete user
+	async DeleteUser(id) {
+		const deletedUser = await this.repository.DeleteUser(id);
+		return FormateData(deletedUser);
+	}
+
+	// get all users
+	async GetAllUsers() {
+		const users = await this.repository.GetAllUsers();
+		return FormateData(users);
+	}
+
+	// create user
+	async CreateUser(userData) {
+		const { email, username, password, firstName, lastName } = userData;
+		try {
+			if (
+				(await this.repository.FindUserByEmail({ email })) ||
+				(await this.repository.FindUserByUsername({ username }))
+			) {
+				return FormateData(null);
+			}
+		} catch (error) {
+			return FormateData({ msg: "Username or Email is registered already!" });
+		}
+
+		let hashedPassword = await generateHashPassword(password);
+		const newUser = await this.repository.Createuser({
+			email,
+			username,
+			password: hashedPassword,
+			firstName,
+			lastName,
+		});
+
+		return FormateData({ _id: newUser._id });
+	}
 }
 
 module.exports = UserService;

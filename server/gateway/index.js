@@ -13,7 +13,7 @@ app.use(cors());
 app.use("/user", proxy("http://localhost:8001"));
 app.use("/product", proxy("http://localhost:8002"));
 app.use("/order", proxy("http://localhost:8003"));
-app.use("/auth", proxy("http://localhost:8004"));
+app.use("/admin", proxy("http://localhost:8004"));
 
 // express app starts listening on port 8000
 app.listen(8000, () => {

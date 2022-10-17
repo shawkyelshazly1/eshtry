@@ -2,6 +2,7 @@ const express = require("express"),
 	cors = require("cors");
 const { productAPI } = require("./api");
 const { databaseConnection } = require("./database");
+const { CreateChannel } = require("./utils");
 require("dotenv").config();
 
 // init express instance
@@ -13,6 +14,10 @@ app.use(cors());
 
 // start product service DB connection
 databaseConnection();
+
+// connect rabbitmqlp
+
+CreateChannel();
 
 //add routes
 productAPI(app);

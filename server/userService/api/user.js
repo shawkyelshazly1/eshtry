@@ -1,10 +1,13 @@
 const UserService = require("../services/user-service"),
 	userAuth = require("./middlewares/auth");
+const { SubscribeMessage } = require("../utils");
 
 // main api routes
-module.exports = (app) => {
+module.exports = (app, channel) => {
 	// create userService instance
 	const service = new UserService();
+
+	SubscribeMessage(channel, "ADMIN-USER", service);
 
 	// signin Route
 	app.post("/login", async (req, res, next) => {

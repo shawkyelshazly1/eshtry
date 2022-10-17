@@ -49,7 +49,8 @@ module.exports.CreateChannel = async () => {
 			process.env.AMQPLIB_CONNECTION_URL
 		);
 		const channel = await connection.createChannel();
-		await channel.assertQueue("USER-ADMIN");
+		await channel.assertQueue("ADMIN-USER");
+
 		return channel;
 	} catch (error) {
 		console.error(error);
@@ -62,28 +63,13 @@ module.exports.PublishMessage = (channel, queue, msg) => {
 	console.log("Sent: ", msg, "to '", queue, "' queue.");
 };
 
-module.exports.SubscribeMessage = async (channel, queue, service) => {
-	await channel.consume(queue, (data) => {
+module.exports.SubscribeMessage = async (channel, queue, res) => {
+	let msg;
+
+	channel.consume(queue, (data) => {
+		msg = JSON.parse(data.content).data;
 		channel.ack(data);
-		this.handleServices(channel, JSON.parse(data.content), service);
+		channel.cancel(data.fields.consumerTag);
+		return res.status(200).json(msg);
 	});
-};
-
-module.exports.handleServices = async (channel, messageData, service) => {
-	switch (messageData.action) {
-		case "CREATE":
-			const { data } = await service.CreateUser(messageData.payload);
-
-			this.PublishMessage(channel, "USER-ADMIN", { data });
-			break;
-		case "DELETE":
-			break;
-		case "GET-ONE":
-			break;
-		case "GET-ALL":
-			break;
-
-		default:
-			break;
-	}
 };

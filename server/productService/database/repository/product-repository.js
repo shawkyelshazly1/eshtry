@@ -28,6 +28,28 @@ class ProductRepository {
 		const products = await ProductModel.find({ categoryId });
 		return products || [];
 	}
+
+	// add product
+	async AddProduct(inputData) {
+		const addedProduct = new ProductModel(inputData);
+		return await addedProduct.save();
+	}
+
+	// add category
+	async AddCategory(inputData) {
+		const addedCategory = new CategoryModel(inputData);
+		return await addedCategory.save();
+	}
+
+	// delete product
+
+	async DeleteProduct(id) {
+		const deletedProduct = await ProductModel.findByIdAndDelete(
+			mongoose.Types.ObjectId(id)
+		);
+
+		return deletedProduct;
+	}
 }
 
 module.exports = ProductRepository;

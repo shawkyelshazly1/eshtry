@@ -7,6 +7,59 @@ class ProductService {
 		this.repository = new ProductRepository();
 	}
 
+	// add new product
+	async addProduct(
+		title,
+		description,
+		price,
+		cover,
+		images = [],
+		categoryId,
+		quantity
+	) {
+		try {
+			const addedProduct = await this.repository.AddProduct({
+				title,
+				description,
+				price,
+				cover,
+				images,
+				categoryId,
+				quantity,
+			});
+			return FormateData(addedProduct);
+		} catch (error) {
+			console.error(error);
+			return FormateData({ msg: "Something went wrong!" });
+		}
+	}
+
+	// delete product
+	async deleteProduct(id) {
+		try {
+			const deletedProduct = await this.repository.DeleteProduct(id);
+			return FormateData(deletedProduct);
+		} catch (error) {
+			console.error(error);
+			return FormateData({ msg: "Something went wrong!" });
+		}
+	}
+
+	// add Category
+	async addCategory(title, description, cover) {
+		try {
+			const addedCategory = await this.repository.AddCategory({
+				title,
+				description,
+				cover,
+			});
+			return FormateData(addedCategory);
+		} catch (error) {
+			console.error(error);
+			return FormateData({ msg: "Something went wrong!" });
+		}
+	}
+
 	// loadProduct service
 	async loadProduct(id) {
 		try {
