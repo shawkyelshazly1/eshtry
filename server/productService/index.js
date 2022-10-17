@@ -16,13 +16,17 @@ app.use(cors());
 databaseConnection();
 
 // connect rabbitmqlp
-
-CreateChannel();
-
-//add routes
-productAPI(app);
+let channel;
+CreateChannel()
+	.then((res) => {
+		channel = res;
+	})
+	.then((_) => {
+		//add routes
+		productAPI(app, channel);
+	});
 
 // express app starts listening on port 8002
-app.listen(8002, () => {
-	console.log("Product service is listening on port 8002.");
+app.listen(process.env.PORT || 8002, () => {
+	console.log(`Product service is listening on port ${process.env.PORT}`);
 });

@@ -50,6 +50,7 @@ module.exports.CreateChannel = async () => {
 		);
 		const channel = await connection.createChannel();
 		await channel.assertQueue("ADMIN-USER");
+		await channel.assertQueue("ADMIN-PRODUCT");
 
 		return channel;
 	} catch (error) {

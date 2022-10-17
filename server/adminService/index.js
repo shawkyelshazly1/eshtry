@@ -3,7 +3,7 @@ const express = require("express"),
 require("dotenv").config();
 const { databaseConnection } = require("./database");
 
-const { adminAPI, userAPI } = require("./api");
+const { adminAPI, userAPI, productAPI, categoryAPI } = require("./api");
 const { CreateChannel } = require("./utils");
 
 // init app instance
@@ -26,6 +26,8 @@ CreateChannel()
 		// setting routes
 		adminAPI(app);
 		userAPI(app, channel);
+		productAPI(app, channel);
+		categoryAPI(app, channel);
 	});
 
 // express app starts listening on port 8004

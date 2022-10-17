@@ -8,15 +8,15 @@ class ProductService {
 	}
 
 	// add new product
-	async addProduct(
+	async addProduct({
 		title,
 		description,
 		price,
 		cover,
 		images = [],
 		categoryId,
-		quantity
-	) {
+		quantity,
+	}) {
 		try {
 			const addedProduct = await this.repository.AddProduct({
 				title,
@@ -28,6 +28,34 @@ class ProductService {
 				quantity,
 			});
 			return FormateData(addedProduct);
+		} catch (error) {
+			console.error(error);
+			return FormateData({ msg: "Something went wrong!" });
+		}
+	}
+
+	// update product
+	async updateProduct(
+		id,
+		title,
+		description,
+		price,
+		cover,
+		images = [],
+		categoryId,
+		quantity
+	) {
+		try {
+			const updatedProduct = await this.repository.UpdateProduct(id, {
+				title,
+				description,
+				price,
+				cover,
+				images,
+				categoryId,
+				quantity,
+			});
+			return FormateData(updatedProduct);
 		} catch (error) {
 			console.error(error);
 			return FormateData({ msg: "Something went wrong!" });
@@ -46,7 +74,7 @@ class ProductService {
 	}
 
 	// add Category
-	async addCategory(title, description, cover) {
+	async addCategory({ title, description, cover }) {
 		try {
 			const addedCategory = await this.repository.AddCategory({
 				title,

@@ -1,7 +1,10 @@
 const ProductService = require("../services/product-service");
+const { SubscribeMessage } = require("../utils");
 
-module.exports = (app) => {
+module.exports = (app, channel) => {
 	const service = new ProductService();
+
+	SubscribeMessage(channel, "ADMIN-PRODUCT", service);
 
 	//get single product by id
 	app.get("/id/:productId", async (req, res, next) => {

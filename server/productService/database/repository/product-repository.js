@@ -35,6 +35,14 @@ class ProductRepository {
 		return await addedProduct.save();
 	}
 
+	// update product
+	async UpdateProduct(id, inputData) {
+		const updatedProduct = await ProductModel.findByIdAndUpdate(id, inputData, {
+			new: true,
+		});
+		return await updatedProduct.save();
+	}
+
 	// add category
 	async AddCategory(inputData) {
 		const addedCategory = new CategoryModel(inputData);

@@ -1,9 +1,5 @@
 const AdminService = require("../services/admin-service");
-const {
-	PublishMessage,
-	SubscribeMessage,
-	StartMessaging,
-} = require("../utils");
+const { StartMessaging } = require("../utils");
 const adminAuth = require("./middlewares/auth");
 
 module.exports = (app, channel) => {
@@ -32,7 +28,7 @@ module.exports = (app, channel) => {
 	});
 
 	// delete User
-	app.delete("/users/:userId", async (req, res, next) => {
+	app.delete("/users/:userId", adminAuth, async (req, res, next) => {
 		const { userId } = req.params;
 		StartMessaging(
 			channel,
@@ -45,7 +41,7 @@ module.exports = (app, channel) => {
 	});
 
 	// get User
-	app.get("/users/:userId", async (req, res, next) => {
+	app.get("/users/:userId", adminAuth, async (req, res, next) => {
 		const { userId } = req.params;
 		StartMessaging(
 			channel,
@@ -58,7 +54,7 @@ module.exports = (app, channel) => {
 	});
 
 	// get all Users
-	app.get("/users", async (req, res, next) => {
+	app.get("/users", adminAuth, async (req, res, next) => {
 		// publish message to user service and send res with the result consumed from the queue
 
 		StartMessaging(channel, "ADMIN-USER", "USER-ADMIN", "GET-ALL", {}, res);
