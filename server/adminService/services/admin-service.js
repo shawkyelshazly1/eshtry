@@ -26,15 +26,21 @@ class AdminService {
 				);
 				if (validPassword) {
 					const token = await generateAccessToken(existingUser);
-
-					return FormateData({ id: existingUser._id, token });
+					const user = await this.repository.GetUserById(existingUser._id);
+					return FormateData({
+						user,
+						token,
+						status: "success",
+					});
 				} else {
-					return FormateData({ msg: "Incorrect password!" });
+					return FormateData({ msg: "Incorrect password!", status: "error" });
 				}
 			} else {
-				return FormateData({ msg: "Email or Password Incorrect!" });
+				return FormateData({
+					msg: "Email or Password Incorrect!",
+					status: "error",
+				});
 			}
-			return FormateData(null);
 		} catch (error) {
 			console.error(error);
 		}
@@ -52,7 +58,7 @@ class AdminService {
 			}
 		} catch (error) {
 			console.error(error);
-			return FormateData({ msg: "Something went wrong!" });
+			return FormateData({ msg: "Something went wrong!", status: "error" });
 		}
 
 		let hashedPassword = await generateHashPassword(password);
@@ -63,7 +69,7 @@ class AdminService {
 			firstName,
 			lastName,
 		});
-		return FormateData({ _id: newUser._id });
+		return FormateData({ _id: newUser._id, status: "success" });
 	}
 
 	// delete user service
@@ -71,13 +77,13 @@ class AdminService {
 		try {
 			if (await this.repository.GetUserById(id)) {
 				const deletedUser = await this.repository.DeleteUser(id);
-				return FormateData(deletedUser);
+				return FormateData({ deletedUser, status: "success" });
 			} else {
 				return FormateData(null);
 			}
 		} catch (error) {
 			console.error(error);
-			return FormateData({ msg: "Something went wrong!" });
+			return FormateData({ msg: "Something went wrong!", status: "error" });
 		}
 	}
 
@@ -85,10 +91,10 @@ class AdminService {
 	async GetUserById(id) {
 		try {
 			const user = await this.repository.GetUserById(id);
-			return FormateData(user);
+			return FormateData({ user, status: "success" });
 		} catch (error) {
 			console.error(error);
-			return FormateData({ msg: "Something went wrong!" });
+			return FormateData({ msg: "Something went wrong!", status: "error" });
 		}
 	}
 
@@ -96,10 +102,10 @@ class AdminService {
 	async GetAllUsers() {
 		try {
 			const users = await this.repository.GetAllUsers();
-			return FormateData(users);
+			return FormateData({ users, status: "success" });
 		} catch (error) {
 			console.error(error);
-			return FormateData({ msg: "Something went wrong!" });
+			return FormateData({ msg: "Something went wrong!", status: "error" });
 		}
 	}
 }

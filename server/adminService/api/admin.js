@@ -13,7 +13,9 @@ module.exports = (app) => {
 			return res.status(409).json({ msg: "Email & Password are required." });
 		}
 		const { data } = await service.SignIn({ email, password });
-		return res.status(200).json(data);
+		return data.status === "success"
+			? res.status(200).json({ user: data.user, token: data.token })
+			: res.status(401).json({ error: data.msg });
 	});
 
 	//register Route
@@ -50,6 +52,14 @@ module.exports = (app) => {
 	// get current User
 	app.get("/profile", adminAuth, async (req, res, next) => {
 		const { _id } = req.user;
+		const { data } = await service.GetUserById(_id);
+		return res.status(200).json(data);
+	});
+
+	// get current User
+	app.get("/auth", adminAuth, async (req, res, next) => {
+		const { _id } = req.user;
+		console.log(_id);
 		const { data } = await service.GetUserById(_id);
 		return res.status(200).json(data);
 	});
