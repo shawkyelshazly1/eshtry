@@ -37,10 +37,26 @@ class ProductRepository {
 
 	// update product
 	async UpdateProduct(id, inputData) {
-		const updatedProduct = await ProductModel.findByIdAndUpdate(id, inputData, {
-			new: true,
-		});
-		return await updatedProduct.save();
+		const updatedProduct = await ProductModel.findByIdAndUpdate(
+			mongoose.Types.ObjectId(id),
+			inputData,
+			{
+				new: true,
+			}
+		);
+		return updatedProduct;
+	}
+
+	// Update product quantity
+	async UpdateProductQuantity(id, quantity) {
+		const updatedProduct = await ProductModel.findByIdAndUpdate(
+			mongoose.Types.ObjectId(id),
+			{ quantity },
+			{
+				new: true,
+			}
+		);
+		return updatedProduct;
 	}
 
 	// add category

@@ -1,8 +1,9 @@
 const { StartMessaging } = require("../utils");
+const adminAuth = require("./middlewares/auth");
 
 module.exports = (app, channel) => {
 	// create category
-	app.post("/categories/create", async (req, res, next) => {
+	app.post("/categories/create", adminAuth, async (req, res, next) => {
 		const { title, description, cover } = req.body;
 		if (!(title && description && cover)) {
 			return res.status(409).json({ msg: "Category data is required." });

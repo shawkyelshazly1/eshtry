@@ -5,6 +5,7 @@ module.exports = (app, channel) => {
 	const service = new ProductService();
 
 	SubscribeMessage(channel, "ADMIN-PRODUCT", service);
+	SubscribeMessage(channel, "ORDER-PRODUCT", service);
 
 	//get single product by id
 	app.get("/id/:productId", async (req, res, next) => {

@@ -3,4 +3,5 @@ module.exports = {
 	categoryAPI: require("./category"),
 	productAPI: require("./product"),
 	userAPI: require("./user"),
+	orderAPI: require("./order"),
 };
